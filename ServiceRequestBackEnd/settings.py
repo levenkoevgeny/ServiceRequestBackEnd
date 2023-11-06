@@ -14,6 +14,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,8 +45,8 @@ AUTH_USER_MODEL = 'appUsers.CustomUser'
 ROOT_URLCONF = 'ServiceRequestBackEnd.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
 ]
 
 TEMPLATES = [
@@ -108,7 +109,7 @@ SIMPLE_JWT = {
 }
 
 WSGI_APPLICATION = 'ServiceRequestBackEnd.wsgi.application'
-
+ASGI_APPLICATION = "ServiceRequestBackEnd.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 

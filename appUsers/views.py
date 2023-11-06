@@ -17,6 +17,7 @@ from .serializers import CustomUserSerializer
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAdminUser]
     filterset_fields = {'username': ['icontains'],
                         'last_name': ['icontains'],
                         'is_superuser': ['exact'],
