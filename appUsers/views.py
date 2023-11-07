@@ -11,13 +11,13 @@ import json
 from django.conf import settings
 
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, UserNamesSerializer
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     filterset_fields = {'username': ['icontains'],
                         'last_name': ['icontains'],
                         'is_superuser': ['exact'],
@@ -42,3 +42,23 @@ def get_me(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def user_registration(request):
+    serializer = CustomUserSerializer(data=request.data)
+    if serializer.is_valid():
+        validated_data = serializer.validated_data
+        validated_data['is_active'] = True
+        CustomUser.objects.create_user(**validated_data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+class UserNamesViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserNamesSerializer
+    filterset_fields = {
+        'username': ['exact'],
+    }

@@ -18,10 +18,12 @@ router = routers.DefaultRouter()
 router.register(r'users', users_views.CustomUserViewSet)
 router.register(r'locations', service_views.LocationViewSet)
 router.register(r'service-requests', service_views.ServiceRequestViewSet)
+router.register(r'usernames', users_views.UserNamesViewSet)
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/api')),
     path('api/users/me/', users_views.get_me),
+    path('api/users/user-registration/', users_views.user_registration),
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

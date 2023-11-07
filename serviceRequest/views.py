@@ -7,7 +7,7 @@ from .serializers import LocationSerializer, ServiceRequestSerializer
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     filterset_fields = {'location': ['icontains'],
                         }
 
@@ -20,9 +20,10 @@ class LocationViewSet(viewsets.ModelViewSet):
 class ServiceRequestViewSet(viewsets.ModelViewSet):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     filterset_fields = {'request_sender': ['exact'], 'location': ['exact'], 'address': ['icontains'],
-                        'request_status': ['exact'], 'executor': ['exact'], 'date_time_created': ['lte', 'gte']
+                        'request_status': ['exact'], 'executor': ['exact'], 'date_time_created': ['lte', 'gte'],
+                        'executor': ['exact']
                         }
 
     def destroy(self, *args, **kwargs):
