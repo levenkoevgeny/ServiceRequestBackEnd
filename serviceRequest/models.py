@@ -16,6 +16,7 @@ class Location(models.Model):
 
 class RequestStatus(models.Model):
     status = models.CharField(max_length=100, verbose_name="Status")
+    status_color = models.CharField(max_length=100, verbose_name="Status color", blank=True, null=True)
 
     def __str__(self):
         return self.status
@@ -40,9 +41,25 @@ class ServiceRequest(models.Model):
     def __str__(self):
         return self.request_sender.username + ' ' + self.request_description
 
+    def save(self, *args, **kwargs):
+        print('save')
+        super(ServiceRequest, self).save(*args, **kwargs)
+
     @property
-    def get_request_status(self):
+    def get_request_status_text(self):
         return self.request_status.status
+
+    @property
+    def get_request_status_color(self):
+        return self.request_status.status_color
+
+    @property
+    def get_sender_name(self):
+        return self.request_sender.username
+
+    @property
+    def get_executor_name(self):
+        return self.executor.username
 
     class Meta:
         ordering = ('id',)

@@ -1,7 +1,7 @@
 from rest_framework import permissions, status, viewsets, mixins
 from rest_framework.response import Response
-from .models import Location, ServiceRequest
-from .serializers import LocationSerializer, ServiceRequestSerializer
+from .models import Location, ServiceRequest, RequestStatus
+from .serializers import LocationSerializer, ServiceRequestSerializer, RequestStatusSerializer
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -30,3 +30,9 @@ class ServiceRequestViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.get_object())
         super().destroy(*args, **kwargs)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RequestStatusViewSet(viewsets.ModelViewSet):
+    queryset = RequestStatus.objects.all()
+    serializer_class = RequestStatusSerializer
+    permission_classes = [permissions.IsAuthenticated]

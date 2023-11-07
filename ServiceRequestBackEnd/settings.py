@@ -11,6 +11,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+REDIS_HOST = "localhost"
 # Application definition
 
 INSTALLED_APPS = [
@@ -112,6 +113,15 @@ WSGI_APPLICATION = 'ServiceRequestBackEnd.wsgi.application'
 ASGI_APPLICATION = "ServiceRequestBackEnd.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, 6379)],
+        },
+    },
+}
 
 DATABASES = {
     'default': {

@@ -11,7 +11,7 @@ class LocationSerializer(serializers.ModelSerializer):
 class RequestStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = RequestStatus
-        fields = ['id', 'status']
+        fields = ['id', 'status', 'status_color']
 
 
 class ServiceRequestSerializer(serializers.ModelSerializer):
@@ -19,4 +19,5 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         model = ServiceRequest
         fields = ['id', 'request_sender', 'location',
                   'address', 'request_description',
-                  'request_status', 'executor', 'date_time_created', 'date_time_edited', 'get_request_status']
+                  'request_status', 'executor', 'date_time_created', 'date_time_edited', 'get_request_status_text',
+                  'get_request_status_color', 'get_sender_name', 'get_executor_name']

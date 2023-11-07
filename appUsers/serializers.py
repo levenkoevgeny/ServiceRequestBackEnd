@@ -24,3 +24,7 @@ class UserNamesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, required=True)
