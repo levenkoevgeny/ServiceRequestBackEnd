@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Location, RequestStatus, ServiceRequest
+from .models import Location, RequestStatus, ServiceRequest, ServiceRequestChatMessage
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -21,3 +21,10 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
                   'address', 'request_description',
                   'request_status', 'executor', 'date_time_created', 'date_time_edited', 'get_request_status_text',
                   'get_request_status_color', 'get_sender_name', 'get_executor_name']
+
+
+class ServiceRequestMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceRequestChatMessage
+        fields = '__all__'
+        depth = 1

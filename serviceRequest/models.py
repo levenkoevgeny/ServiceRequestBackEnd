@@ -65,3 +65,17 @@ class ServiceRequest(models.Model):
         ordering = ('id',)
         verbose_name = 'Request'
         verbose_name_plural = 'Requests'
+
+
+class ServiceRequestChatMessage(models.Model):
+    message_text = models.TextField(verbose_name="Message")
+    service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, verbose_name="Service request")
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Sender")
+
+    def __str__(self):
+        return self.message_text
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'Message'
+        verbose_name_plural = 'Messages'

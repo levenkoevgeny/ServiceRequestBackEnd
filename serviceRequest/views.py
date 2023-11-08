@@ -1,7 +1,8 @@
 from rest_framework import permissions, status, viewsets, mixins
 from rest_framework.response import Response
-from .models import Location, ServiceRequest, RequestStatus
-from .serializers import LocationSerializer, ServiceRequestSerializer, RequestStatusSerializer
+from .models import Location, ServiceRequest, RequestStatus, ServiceRequestChatMessage
+from .serializers import LocationSerializer, ServiceRequestSerializer, RequestStatusSerializer, \
+    ServiceRequestMessageSerializer
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -36,3 +37,15 @@ class RequestStatusViewSet(viewsets.ModelViewSet):
     queryset = RequestStatus.objects.all()
     serializer_class = RequestStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class ServiceRequestMessageViewSet(viewsets.ModelViewSet):
+    queryset = ServiceRequestChatMessage.objects.all()
+    serializer_class = ServiceRequestMessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = {'service_request': ['exact'], 'sender': ['exact'], 'message_text': ['icontains']}
+
+    def destroy(self, *args, **kwargs):
+        serializer = self.get_serializer(self.get_object())
+        super().destroy(*args, **kwargs)
+        return Response(serializer.data, status=status.HTTP_200_OK)
