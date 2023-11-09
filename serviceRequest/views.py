@@ -27,6 +27,8 @@ class ServiceRequestViewSet(viewsets.ModelViewSet):
                         'executor': ['exact']
                         }
 
+
+
     def destroy(self, *args, **kwargs):
         serializer = self.get_serializer(self.get_object())
         super().destroy(*args, **kwargs)
