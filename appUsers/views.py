@@ -23,6 +23,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
                         'is_superuser': ['exact'],
                         'is_staff': ['exact'],
                         'is_active': ['exact'],
+                        'can_be_executor': ['exact'],
                         }
 
     @action(detail=True, methods=['post'])

@@ -13,7 +13,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
                   'last_name',
                   'is_active',
                   'date_joined',
-                  'last_login'
+                  'last_login',
+                  'can_be_executor'
                   ]
 
     def create(self, validated_data):

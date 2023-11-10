@@ -70,7 +70,7 @@ class ServiceRequest(models.Model):
 
     @property
     def not_read_messages_count(self):
-        return self.servicerequestchatmessage_set.filter(isRead=False).count()
+        return self.servicerequestchatmessage_set.filter(is_read=False).count()
 
     class Meta:
         ordering = ('id',)
@@ -82,7 +82,7 @@ class ServiceRequestChatMessage(models.Model):
     message_text = models.TextField(verbose_name="Message")
     service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, verbose_name="Service request")
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Sender")
-    isRead = models.BooleanField(verbose_name="Is read", default=False)
+    is_read = models.BooleanField(verbose_name="Is read", default=False)
 
     def save(self, *args, **kwargs):
         from .serializers import ServiceRequestMessageSerializer, ServiceRequestSerializer
