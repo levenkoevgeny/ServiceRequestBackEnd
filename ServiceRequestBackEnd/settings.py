@@ -48,6 +48,7 @@ ROOT_URLCONF = 'ServiceRequestBackEnd.urls'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "http://192.168.100.10:8080",
 ]
 
 TEMPLATES = [
@@ -74,7 +75,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
      'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 50
+    'PAGE_SIZE': 30
 }
 
 SIMPLE_JWT = {

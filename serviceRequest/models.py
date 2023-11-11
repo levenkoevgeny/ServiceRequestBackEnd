@@ -83,6 +83,7 @@ class ServiceRequestChatMessage(models.Model):
     service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, verbose_name="Service request")
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Sender")
     is_read = models.BooleanField(verbose_name="Is read", default=False)
+    date_time_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         from .serializers import ServiceRequestMessageSerializer, ServiceRequestSerializer

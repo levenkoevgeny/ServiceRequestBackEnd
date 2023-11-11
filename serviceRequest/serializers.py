@@ -30,4 +30,5 @@ class ServiceRequestMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ServiceRequestChatMessage
-        fields = ['id', 'message_text', 'service_request', 'sender', 'is_read', 'service_data', 'sender_data']
+        fields = ['id', 'message_text', 'service_request', 'sender', 'is_read', 'service_data', 'sender_data',
+                  'date_time_created']
