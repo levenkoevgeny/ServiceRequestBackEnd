@@ -73,7 +73,7 @@ class ServiceRequest(models.Model):
         return self.servicerequestchatmessage_set.filter(is_read=False).count()
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('-id',)
         verbose_name = 'Request'
         verbose_name_plural = 'Requests'
 
