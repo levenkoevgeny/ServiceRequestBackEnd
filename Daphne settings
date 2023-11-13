@@ -1,0 +1,11 @@
+[Unit]
+Description=AMIACovid Daphne Service
+After=network.target
+[Service]
+Type=simple
+User=user
+WorkingDirectory=/home/user/AMIACovid
+ExecStart=/home/user/myenv/bin/daphne -b 0.0.0.0 -p 8000 AMIACovid.asgi:application
+[Install]
+WantedBy=multi-user.target
+

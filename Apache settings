@@ -1,0 +1,21 @@
+<VirtualHost *:80>
+
+    ProxyPass "/ws/" "ws://127.0.0.1:8000/ws/"
+    ProxyPassReverse "/ws/" "ws://127.0.0.1:8000/ws/"
+
+    Alias /static /home/user/AMIACovid/static
+    <Directory /home/user/AMIACovid/static>
+        Require all granted
+    </Directory>
+
+    <Directory /home/user/AMIACovid/AMIACovid>
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+    </Directory>
+
+    WSGIDaemonProcess AMIACovid python-home=/home/user/myenv python-path=/home/user/AMIACovid
+    WSGIProcessGroup AMIACovid
+    WSGIScriptAlias / /home/user/AMIACovid/AMIACovid/wsgi.py
+
+</VirtualHost>
