@@ -21,6 +21,7 @@ class Location(models.Model):
 class RequestStatus(models.Model):
     status = models.CharField(max_length=100, verbose_name="Status")
     status_color = models.CharField(max_length=100, verbose_name="Status color", blank=True, null=True)
+    is_block_chat = models.BooleanField(verbose_name="Is blocking chat", default=False)
 
     def __str__(self):
         return self.status
@@ -59,6 +60,10 @@ class ServiceRequest(models.Model):
     @property
     def get_request_status_color(self):
         return self.request_status.status_color
+
+    @property
+    def get_request_status_block(self):
+        return self.request_status.is_block_chat
 
     @property
     def get_sender_name(self):

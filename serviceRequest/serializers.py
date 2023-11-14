@@ -21,7 +21,8 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         fields = ['id', 'request_sender', 'location',
                   'address', 'request_description',
                   'request_status', 'executor', 'date_time_created', 'date_time_edited', 'get_request_status_text',
-                  'get_request_status_color', 'get_sender_name', 'get_executor_name', 'not_read_messages_count']
+                  'get_request_status_color', 'get_sender_name', 'get_executor_name', 'not_read_messages_count',
+                  'get_request_status_block']
 
 
 class ServiceRequestMessageSerializer(serializers.ModelSerializer):

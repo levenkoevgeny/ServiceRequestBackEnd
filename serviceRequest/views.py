@@ -1,8 +1,11 @@
 from rest_framework import permissions, status, viewsets, mixins
 from rest_framework.response import Response
 from .models import Location, ServiceRequest, RequestStatus, ServiceRequestChatMessage
+from appUsers.models import CustomUser
 from .serializers import LocationSerializer, ServiceRequestSerializer, RequestStatusSerializer, \
     ServiceRequestMessageSerializer
+from jose import jwt
+from django.conf import settings
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -18,10 +21,22 @@ class LocationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class IsOwner(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
+        payload = jwt.decode(token, key=settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=['HS256'])
+        user_data = CustomUser.objects.get(pk=payload['user_id'])
+        if user_data.is_staff:
+            return True
+        else:
+            return obj.request_sender == user_data
+
+
 class ServiceRequestViewSet(viewsets.ModelViewSet):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     filterset_fields = {'request_sender': ['exact'], 'location': ['exact'], 'address': ['icontains'],
                         'request_status': ['exact'], 'executor': ['exact'], 'date_time_created': ['lte', 'gte'],
                         'executor': ['exact']
