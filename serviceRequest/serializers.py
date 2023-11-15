@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Location, RequestStatus, ServiceRequest, ServiceRequestChatMessage
+from .models import Location, RequestStatus, ServiceRequest, ServiceRequestChatMessage, MessageReading
 from appUsers.serializers import CustomUserSerializer
 
 
@@ -21,7 +21,7 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         fields = ['id', 'request_sender', 'location',
                   'address', 'request_description',
                   'request_status', 'executor', 'date_time_created', 'date_time_edited', 'get_request_status_text',
-                  'get_request_status_color', 'get_sender_name', 'get_executor_name', 'not_read_messages_count',
+                  'get_request_status_color', 'get_sender_name', 'get_executor_name',
                   'get_request_status_block']
 
 
@@ -31,5 +31,12 @@ class ServiceRequestMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ServiceRequestChatMessage
-        fields = ['id', 'message_text', 'service_request', 'sender', 'is_read', 'service_data', 'sender_data',
+        fields = ['id', 'message_text', 'service_request', 'sender', 'service_data', 'sender_data',
                   'date_time_created']
+
+
+class MessageReadingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MessageReading
+        fields = '__all__'

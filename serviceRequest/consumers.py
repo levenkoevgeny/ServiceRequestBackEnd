@@ -44,3 +44,24 @@ class ServiceRequestsConsumer(WebsocketConsumer):
     def chat_message(self, event):
         message = event["message"]
         self.send(text_data=json.dumps(message))
+
+
+class UnreadMessagesCountConsumer(WebsocketConsumer):
+    def connect(self):
+        self.user = self.scope["url_route"]["kwargs"]["user_id"]
+        self.user_group_name = f"unread_{self.user}"
+
+        async_to_sync(self.channel_layer.group_add)(
+            self.user_group_name, self.channel_name
+        )
+
+        self.accept()
+
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.user_group_name, self.channel_name
+        )
+
+    def chat_message(self, event):
+        message = event["message"]
+        self.send(text_data=json.dumps(message))

@@ -6,10 +6,11 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from jose import jwt
-
+import json
 from django.conf import settings
 
 from .models import CustomUser
+from serviceRequest.models import ServiceRequest, ServiceRequestChatMessage, MessageReading
 from .serializers import CustomUserSerializer, UserNamesSerializer, ChangePasswordSerializer
 
 
@@ -36,6 +37,22 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def get_unread_messages_count_in_requests(self, request, pk=None):
+        user = self.get_object()
+        service_request_list = ServiceRequest.objects.all()
+        res = {}
+        for ser_req in service_request_list:
+            full_count_of_messages = ser_req.servicerequestchatmessage_set.count()
+            read_count = MessageReading.objects.filter(message__service_request=ser_req, who_read=user).count()
+            res[ser_req.id] = full_count_of_messages - read_count
+        return Response(res, status=status.HTTP_200_OK)
+
+
+
+
+
 
     def destroy(self, *args, **kwargs):
         serializer = self.get_serializer(self.get_object())

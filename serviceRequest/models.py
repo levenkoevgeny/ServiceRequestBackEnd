@@ -73,10 +73,6 @@ class ServiceRequest(models.Model):
     def get_executor_name(self):
         return self.executor.username
 
-    @property
-    def not_read_messages_count(self):
-        return self.servicerequestchatmessage_set.filter(is_read=False).count()
-
     class Meta:
         ordering = ('-id',)
         verbose_name = 'Request'
@@ -87,20 +83,31 @@ class ServiceRequestChatMessage(models.Model):
     message_text = models.TextField(verbose_name="Message")
     service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, verbose_name="Service request")
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Sender")
-    is_read = models.BooleanField(verbose_name="Is read", default=False)
     date_time_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        from .serializers import ServiceRequestMessageSerializer, ServiceRequestSerializer
+        from .serializers import ServiceRequestMessageSerializer
         super(ServiceRequestChatMessage, self).save(*args, **kwargs)
         serializer = ServiceRequestMessageSerializer(self)
         async_to_sync(channel_layer.group_send)(f"chat_{self.service_request.id}",
                                                 {"type": "chat.message", "message": serializer.data})
 
         service_request_after_add_message = self.service_request
-        serializer = ServiceRequestSerializer(service_request_after_add_message)
-        async_to_sync(channel_layer.group_send)(f"requests_{self.service_request.request_sender.id}",
-                                                {"type": "chat.message", "message": serializer.data})
+        admin_list = CustomUser.objects.filter(is_staff=True)
+        for admin in admin_list:
+            service_request_after_add_message.servicerequestchatmessage_set.count()
+            unread_count = service_request_after_add_message.servicerequestchatmessage_set.count() - MessageReading.objects.filter(
+                message__service_request=service_request_after_add_message,
+                who_read=admin).count()
+            async_to_sync(channel_layer.group_send)(f"unread_{admin.id}",
+                                                    {"type": "chat.message",
+                                                     "message": {str(service_request_after_add_message.id): unread_count}})
+            unread_count_ = service_request_after_add_message.servicerequestchatmessage_set.count() - MessageReading.objects.filter(
+                message__service_request=service_request_after_add_message,
+                who_read=service_request_after_add_message.request_sender).count()
+            async_to_sync(channel_layer.group_send)(f"unread_{service_request_after_add_message.request_sender.id}",
+                                                    {"type": "chat.message",
+                                                     "message": {str(service_request_after_add_message.id): unread_count_}})
 
     def __str__(self):
         return self.message_text
@@ -109,3 +116,17 @@ class ServiceRequestChatMessage(models.Model):
         ordering = ('id',)
         verbose_name = 'Message'
         verbose_name_plural = 'Messages'
+
+
+class MessageReading(models.Model):
+    message = models.ForeignKey(ServiceRequestChatMessage, on_delete=models.CASCADE, verbose_name="Message")
+    who_read = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="Who read")
+    date_time_read = models.DateTimeField(auto_now_add=True, verbose_name="Date anf time of reading")
+
+    def __str__(self):
+        return str(self.message) + ' ' + str(self.who_read)
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'Message_Reading'
+        verbose_name_plural = 'Message_Readings'

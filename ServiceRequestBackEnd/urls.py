@@ -21,6 +21,7 @@ router.register(r'service-requests', service_views.ServiceRequestViewSet)
 router.register(r'usernames', users_views.UserNamesViewSet)
 router.register(r'statuses', service_views.RequestStatusViewSet)
 router.register(r'messages', service_views.ServiceRequestMessageViewSet)
+router.register(r'message-readings', service_views.MessageReadingViewSet)
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/api')),
