@@ -11,7 +11,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-REDIS_HOST = "localhost"
+REDIS_HOST = "192.168.88.250"
 # Application definition
 
 INSTALLED_APPS = [

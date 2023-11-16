@@ -53,18 +53,7 @@ class ServiceRequestViewSet(viewsets.ModelViewSet):
         read_messages = MessageReading.objects.filter(message__service_request=service_request, who_read=user)
         ids = [r.message.id for r in read_messages]
         serializer = ServiceRequestMessageSerializer(all_messages.exclude(id__in=ids), many=True)
-        print('!!!!!!!!!!!', serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # serializer = ServiceRequestMessageSerializer(data=)
-
-        # service_request = self.get_object()
-        # service_request_list = ServiceRequest.objects.all()
-        # res = {}
-        # for ser_req in service_request_list:
-        #     full_count_of_messages = ser_req.servicerequestchatmessage_set.count()
-        #     read_count = MessageReading.objects.filter(message__service_request=ser_req, who_read=user).count()
-        #     res[ser_req.id] = full_count_of_messages - read_count
-        # return Response(res, status=status.HTTP_200_OK)
 
     def destroy(self, *args, **kwargs):
         serializer = self.get_serializer(self.get_object())
@@ -76,6 +65,11 @@ class RequestStatusViewSet(viewsets.ModelViewSet):
     queryset = RequestStatus.objects.all()
     serializer_class = RequestStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def destroy(self, *args, **kwargs):
+        serializer = self.get_serializer(self.get_object())
+        super().destroy(*args, **kwargs)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ServiceRequestMessageViewSet(viewsets.ModelViewSet):
